@@ -1,5 +1,3 @@
-import java.util.function.Predicate;
-
 /**
  * Created by mik on 19/06/16.
  */
