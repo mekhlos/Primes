@@ -1,25 +1,50 @@
+import java.util.function.Predicate;
+
 /**
  * Created by mik on 19/06/16.
  */
 class PrimeSieve {
 
-//    private static PrimeSieve primeSieve;
+    private static PrimeSieve primeSieve;
 
-    private final int INT_SIZE = 31;
-    private final int limit;
+    private final int INT_SIZE = 32;
+    private int limit;
     private int[] sieve;
 
-    PrimeSieve(int limit) {
 
-        this.limit = limit;
-        int numOfBins = this.limit / INT_SIZE + 1;
-        this.sieve = new int[numOfBins];
+    private PrimeSieve() {
+    }
 
-        initialiseSieve();
+    static PrimeSieve getInstance() {
+        if (primeSieve == null) {
+            primeSieve = new PrimeSieve();
+        }
+
+        return primeSieve;
+    }
+
+
+    /* creating new sieve if the given max value is greater
+    than the value the sieve is currently generated with */
+    void initSieve(int maxValue) {
+        initSieve(maxValue, false);
+    }
+
+    /* creating new sieve if the given max value is greater
+    than the value the sieve is currently generated with */
+    void initSieve(int maxValue, boolean forceNew) {
+
+        if (maxValue > this.limit || forceNew) {
+            this.limit = maxValue;
+            int numOfBins = this.limit / INT_SIZE + 1;
+            this.sieve = new int[numOfBins];
+
+            generateSieve();
+        }
 
     }
 
-    private void initialiseSieve() {
+    private void generateSieve() {
         for (int n = 2; n <= Math.sqrt(limit); n++) {
 
             // index to the array element
@@ -29,7 +54,7 @@ class PrimeSieve {
             int bitIndex = n % INT_SIZE;
 
             // if bit is zero in bin at index
-            if ((~sieve[binIndex] & (1 << bitIndex)) != 0) {
+            if (isZeroInSave(binIndex, bitIndex)) {
                 // found a prime
                 for (int multipleOfN = n * n; multipleOfN < limit; multipleOfN += n) {
 
@@ -46,11 +71,15 @@ class PrimeSieve {
         }
     }
 
+    private boolean isZeroInSave(int binIndex, int bitIndex) {
+        return (~sieve[binIndex] & (1 << bitIndex)) != 0;
+    }
+
     boolean isPrime(int n) {
         int binIndex = n / INT_SIZE;
         int bitIndex = n % INT_SIZE;
 
-        return ((~sieve[binIndex] & (1 << bitIndex)) != 0);
+        return isZeroInSave(binIndex, bitIndex);
     }
 
 
@@ -64,7 +93,15 @@ class PrimeSieve {
 
     @Override
     public String toString() {
-        return "";
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < limit; i++) {
+            if (isPrime(i)) {
+                sb.append(i).append("\n");
+            }
+        }
+
+        return sb.toString();
     }
 
 

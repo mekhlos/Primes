@@ -7,7 +7,9 @@ import org.junit.runner.RunWith;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 /**
  * Created by mik on 19/06/16.
@@ -41,17 +43,40 @@ public class Test {
         Assert.assertFalse(f1.test(n));
         Assert.assertFalse(f2.test(n));
 
-
     }
 
     @org.junit.Test
-    public void prime2Test() {
-//        IntStream.range(0, 20).forEach(x -> System.out.println(x + " - " + f2.test(x)));
+    public void checkIfSame() {
+        PrimeSieve sieve = PrimeSieve.getInstance();
 
+        int maxValue = 1000000;
+        sieve.initSieve(maxValue);
 
-        PrimeSieve sieve = new PrimeSieve(100);
+        IntStream
+                .range(0, maxValue)
+                .forEach(n -> Assert.assertEquals(Primes.isPrime(n), sieve.isPrime(n)));
+    }
 
-        sieve.printSieve();
+    @org.junit.Test
+    public void timeTest() {
+
+        PrimeSieve sieve = PrimeSieve.getInstance();
+
+        int maxValue = 100000000;
+
+        long start = System.nanoTime();
+        sieve.initSieve(maxValue, true);
+        long end = System.nanoTime();
+        long diff = end - start;
+
+        System.out.println("Generated sieve of size "
+                + maxValue +
+                " in: "
+                + TimeUnit.MILLISECONDS.convert(diff, TimeUnit.NANOSECONDS)
+                + " ms ("
+                + diff
+                + ") ns");
+
     }
 
 
