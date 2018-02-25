@@ -22,8 +22,6 @@ class PrimeSieve {
     }
 
 
-    /* creating new sieve if the given max value is greater
-    than the value the sieve is currently generated with */
     void initSieve(int maxValue) {
         initSieve(maxValue, false);
     }
@@ -52,7 +50,7 @@ class PrimeSieve {
             int bitIndex = n % INT_SIZE;
 
             // if bit is zero in bin at index
-            if (isZeroInSave(binIndex, bitIndex)) {
+            if (isZeroInSieve(binIndex, bitIndex)) {
                 // found a prime
                 for (int multipleOfN = n * n; multipleOfN < limit; multipleOfN += n) {
 
@@ -69,7 +67,7 @@ class PrimeSieve {
         }
     }
 
-    private boolean isZeroInSave(int binIndex, int bitIndex) {
+    private boolean isZeroInSieve(int binIndex, int bitIndex) {
         return (~sieve[binIndex] & (1 << bitIndex)) != 0;
     }
 
@@ -77,7 +75,7 @@ class PrimeSieve {
         int binIndex = n / INT_SIZE;
         int bitIndex = n % INT_SIZE;
 
-        return isZeroInSave(binIndex, bitIndex);
+        return isZeroInSieve(binIndex, bitIndex);
     }
 
 
